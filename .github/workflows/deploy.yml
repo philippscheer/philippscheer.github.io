@@ -3,36 +3,61 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main
+      - main # This workflow runs when changes are pushed to the 'main' branch
 
+# Permissions are essential for GitHub Pages deployment.
+# 'contents: read' is needed for checkout.
+# 'pages: write' is needed to deploy to GitHub Pages.
+# 'id-token: write' is needed for OpenID Connect (OIDC) authentication with GitHub Pages.
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+  # Build job: This job is responsible for setting up the environment,
+  # installing dependencies, building your static site, and uploading the
+  # build artifact for deployment.
+  build:
+    runs-on: ubuntu-latest # Specifies the runner environment
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Checks out your repository code
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v4 # Sets up Node.js environment
         with:
-          node-version: 18
-          cache: 'npm'
+          node-version: 18 # Specifies Node.js version 18
+          cache: 'npm' # Caches npm dependencies to speed up builds
 
       - name: Install dependencies
-        run: npm install
+        run: npm install # Installs project dependencies using npm
 
       - name: Build static site
-        run: npm run build
+        run: npm run build # Runs your project's build script.
+                           # This is expected to output static files into the './out' directory.
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Setup Pages
+        id: pages # Assigns an ID to this step to reference its outputs later
+        uses: actions/configure-pages@v5 # Configures GitHub Pages settings
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3 # Uploads the build output as an artifact
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./out
-          publish_branch: gh-pages
-          user_name: github-actions[bot]
-          user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          path: './out' # Specifies the directory containing your built static files.
+                        # This matches the 'publish_dir' from your old script.
+
+  # Deployment job: This job takes the artifact uploaded by the 'build' job
+  # and deploys it to GitHub Pages.
+  deploy:
+    environment:
+      name: github-pages # Specifies the deployment environment, which is 'github-pages'
+      url: ${{steps.deployment.outputs.page_url}} # Sets the URL for the deployed site
+    runs-on: ubuntu-latest # Specifies the runner environment
+    needs: build # Ensures this job only runs after the 'build' job has successfully completed
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment # Assigns an ID to this step to reference its outputs
+        uses: actions/deploy-pages@v4 # The official GitHub Action for deploying to GitHub Pages
