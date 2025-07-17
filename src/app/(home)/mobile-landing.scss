@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@100..900&display=swap');
+
+
+* {
+  font-family: "Geist", sans-serif;
+}
+
+.landing-main {
+  .hero-container {
+    .hero-subsubtitle {
+      width: min(675px, 100%);
+    }
+
+    h1 {
+      line-height: 1.1;
+    }
+
+    @media screen and (max-width: 1600px) {
+      padding-left: 7vw !important;
+      padding-right: 7vw !important;
+    }
+
+    @media screen and (max-width: 1400px) {
+      .avatar-container {
+        margin-right: 100px !important;
+      }
+    }
+
+    @media screen and (max-width: 1300px) {
+      padding-left: 5vw !important;
+      padding-right: 5vw !important;
+
+      .avatar-container > div > div:not(.avatar-image-container) {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 1200px) {
+      .avatar-container {
+        margin-right: 25px !important;
+      }
+    }
+    
+    @media screen and (max-width: 1050px) {
+      & {
+        padding-top: 10vh !important;
+      }
+
+      & > div {
+        flex-direction: column-reverse;
+        gap: 75px;
+      }
+
+      .avatar-container {
+        margin-right: unset !important;
+        margin-left: 25px !important;
+      }
+    }
+  }
+}

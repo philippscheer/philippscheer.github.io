@@ -6,8 +6,11 @@ const withMDX = createMDX();
 const config = {
   reactStrictMode: true,
   output: 'export',
-  basePath: '/philippscheer.github.io',
+  basePath: '',
   trailingSlash: true,
+  images: {
+    unoptimized: true
+  }
 };
 
 export default withMDX(config);
