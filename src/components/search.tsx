@@ -17,7 +17,6 @@ import { useI18n } from 'fumadocs-ui/contexts/i18n';
 function initOrama() {
   return create({
     schema: { _: 'string' },
-    // https://docs.orama.com/open-source/supported-languages
     language: 'english',
   });
 }
@@ -29,6 +28,8 @@ export default function DefaultSearchDialog(props: SharedProps) {
     initOrama,
     locale,
   });
+
+  console.log("initOrama", initOrama());
 
   return (
     <SearchDialog
